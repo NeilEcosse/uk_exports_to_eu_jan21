@@ -1,0 +1,151 @@
+---
+output:
+  html_document:
+    code_folding: hide
+  html_notebook: default
+  pdf_document: default
+---
+# EU to UK exports - monthly totals as at January 2021
+
+This uses UK Office for National Statistics data published on  12th March 2021, available at the link below:
+
+https://www.ons.gov.uk/economy/nationalaccounts/balanceofpayments/datasets/uktradeallcountriesseasonallyadjusted
+
+
+```{r, warning = F, message = F}
+library(tidyverse)
+library(janitor)
+library(here)
+library(lubridate)
+library(tidyquant)
+
+```
+
+
+## Load and clean data
+
+This uses data on UK exports from this Excel file:
+https://www.ons.gov.uk/file?uri=/economy/nationalaccounts/balanceofpayments/datasets/uktradeallcountriesseasonallyadjusted/current/allcountriesjan2021final.xlsx
+
+I have copied the EU data from the *Monthly Exports* tab into a separate csv saved in the `data_raw` folder, which is the one I'm loading in here.
+
+The full Excel file is also saved for reference in the `data_raw` folder.
+
+```{r, warning = F, message = F}
+# Read in exports data
+uk_to_eu_exports <- read_csv(here("data_raw/exports.csv"))
+
+# Pivot longer - convert month columns to rows
+uk_to_eu_exports <- uk_to_eu_exports %>% 
+  pivot_longer(cols = "01/01/1997":"01/01/2021",
+               names_to = "month",
+               values_to = "exports_pounds_million")
+
+# Convert month column to date format
+uk_to_eu_exports <- uk_to_eu_exports %>% 
+  mutate(month = dmy(month))
+
+# Add year_month column
+uk_to_eu_exports <- uk_to_eu_exports %>%
+mutate(month_year = zoo::as.yearmon(month))
+
+# Reorder data based on exports in Dec 2020 (highest to lowest)
+uk_to_eu_exports <- uk_to_eu_exports %>%
+mutate(country_name = factor
+(country_name, levels =
+c("Total EU",
+"Germany",
+"Ireland",
+"Netherlands",
+"France",
+"Belgium",
+"Italy",
+"Spain",
+"Poland",
+"Sweden",
+"Denmark",
+"Czech Republic",
+"Portugal",
+"Austria",
+"Hungary",
+"Romania",
+"Finland",
+"Greece",
+"Slovakia",
+"Cyprus",
+"Malta",
+"Lithuania",
+"Latvia",
+"Bulgaria",
+"Estonia",
+"Slovenia",
+"Luxembourg",
+"Croatia"))) 
+```
+
+
+
+## Visualise the data - Jan 2020 to Jan 2021
+
+### Total exports to EU
+```{r}
+uk_to_eu_exports %>% 
+filter(month_year >= "2019-12") %>% 
+filter(country_name == "Total EU") %>% 
+ggplot()+
+  aes(x = month, y = exports_pounds_million) +
+  geom_line(size  = 2, colour = "steel blue") +
+  theme_minimal() + 
+  scale_y_continuous(labels = scales::comma) +
+  scale_x_date(date_breaks = "1 month", date_labels =  "%b %Y") +
+  theme(axis.text.x = element_text(angle=45,hjust=1)) +
+  theme(plot.subtitle = element_text(size = 8)) +
+  theme(axis.text = element_text(size = 7)) +
+  theme(axis.text.x = element_text(angle = 45, hjust=1)) +
+  theme(axis.title = element_text(size = 8)) +
+   theme(legend.position="bottom") +
+  labs(
+    title = "UK Trade in Goods - Total for All EU Countries - Monthly Exports",
+    subtitle = "Source: Office for National Statistics \n",
+    x = "",
+    y = "£ million, seasonally adjusted, current price \n",
+    colour = ""
+  ) 
+
+
+```
+
+
+### Exports to selected EU countries
+```{r}
+uk_to_eu_exports %>% 
+filter(month_year >= "2019-12") %>% 
+filter(country_name %in% c(
+"Germany",
+"Ireland",
+"Netherlands",
+"France",
+"Belgium")) %>% 
+ggplot()+
+  aes(x = month, y = exports_pounds_million, group  = country_name, colour = country_name) +
+  geom_line(size  = 2) +
+  theme_minimal() + 
+  scale_y_continuous(labels = scales::comma) +
+  scale_x_date(date_breaks = "1 month", date_labels =  "%b %Y") +
+  theme(axis.text.x = element_text(angle=45,hjust=1)) +
+  theme(plot.subtitle = element_text(size = 8)) +
+  theme(axis.text = element_text(size = 7)) +
+  theme(axis.text.x = element_text(angle = 45, hjust=1)) +
+  theme(axis.title = element_text(size = 8)) +
+   theme(legend.position="bottom") +
+  labs(
+    title = "UK Trade in Goods - Selected EU Countries - Monthly Exports",
+    subtitle = "Source: Office for National Statistics \n",
+    x = "",
+    y = "£ million, seasonally adjusted, current price \n",
+    colour = ""
+  ) 
+
+
+```
+
