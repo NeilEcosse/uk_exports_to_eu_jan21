@@ -33,7 +33,7 @@ The full Excel file is also saved for reference in the `data_raw` folder.
 
 ```{r, warning = F, message = F}
 # Read in exports data
-uk_to_eu_exports <- read_csv(here("data_raw/exports.csv"))
+uk_to_eu_exports <- read_csv(here("data_raw/eu_exports.csv"))
 
 # Pivot longer - convert month columns to rows
 uk_to_eu_exports <- uk_to_eu_exports %>% 
