@@ -5,7 +5,7 @@ output:
   html_notebook: default
   pdf_document: default
 ---
-# EU to UK exports - monthly totals as at January 2021
+# UK to EU exports - monthly totals as at January 2021
 
 This uses UK Office for National Statistics data published on  12th March 2021, available at the link below:
 
@@ -49,7 +49,7 @@ uk_to_eu_exports <- uk_to_eu_exports %>%
 uk_to_eu_exports <- uk_to_eu_exports %>%
 mutate(month_year = zoo::as.yearmon(month))
 
-# Reorder data based on exports in Dec 2020 (highest to lowest)
+# Reorder data based on exports in Dec 2020 (highest to lowest by value)
 uk_to_eu_exports <- uk_to_eu_exports %>%
 mutate(country_name = factor
 (country_name, levels =
@@ -85,7 +85,7 @@ c("Total EU",
 
 
 
-## Visualise the data - Jan 2020 to Jan 2021
+## Visualise the data - Dec 2019 to Jan 2021
 
 ### Total exports to EU
 ```{r}
