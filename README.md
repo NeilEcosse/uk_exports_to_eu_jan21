@@ -5,7 +5,7 @@ This uses UK Office for National Statistics data published on  12th March 2021, 
 https://www.ons.gov.uk/economy/nationalaccounts/balanceofpayments/datasets/uktradeallcountriesseasonallyadjusted
 
 
-The most recent period covered by this data in January 2021, giving us the first published figures after the Brexit withdrawal agreement came into effect.
+The most recent period covered by this data is January 2021, giving us the first published figures after the Brexit withdrawal agreement came into effect.
 
 <br>
 
