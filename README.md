@@ -9,6 +9,8 @@ The most recent period covered by this data in January 2021, giving us the first
 
 <br>
 
+<br>
+
 ## Total exports to all EU countries
 
 <img src = "images/exports_eu_total.png">
@@ -32,6 +34,9 @@ Figures to note:
 
 <img src = "images/exports_selected_countries.png">
 
+<br>
+
+<br>
 
 ### Notes on this report
 
